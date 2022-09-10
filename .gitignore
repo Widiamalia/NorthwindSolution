@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Northwind.Web/wwwroot/lib/sneat-1.0.0
