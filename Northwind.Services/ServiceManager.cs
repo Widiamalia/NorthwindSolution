@@ -13,13 +13,18 @@ namespace Northwind.Services
     {
         private readonly Lazy<ICategoryService> _lazyCategoryService;
 
-        public ServiceManager(IRepositoryManager repositoryManager,IMapper mapper)
+        private readonly Lazy<IProductService> _lazyProductService;
+
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _lazyCategoryService = new Lazy<ICategoryService>(
                 () => new CategoryService(repositoryManager, mapper));
+
+            _lazyProductService = new Lazy<IProductService>(
+                () => new ProductService(repositoryManager, mapper));
         }
 
         public ICategoryService CategoryService => _lazyCategoryService.Value;
-        
+        public IProductService ProductService => _lazyProductService.Value;
     }
 }
