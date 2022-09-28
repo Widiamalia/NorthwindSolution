@@ -19,15 +19,19 @@ namespace Northwind.Web.Controllers
         private readonly IServiceManager _serviceContext;
 
 
+
         public ProductsPagedServerController(NorthwindContext context, IServiceManager serviceContext)
         {
             _context = context;
             _serviceContext = serviceContext;
         }
 
+        
         // GET: ProductsPagedServer
         public async Task<IActionResult> Index(string searchString,
              string currentFilter, string sortOrder, int? page, int? fetchSize)
+
+
         {
             var pageIndex = page ?? 1;
             var pageSize = fetchSize ?? 5;
@@ -86,6 +90,14 @@ namespace Northwind.Web.Controllers
 
             return View(productDtosPaged);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductPhoto(ProductPhotoGroupDto productPhoto)
+        {
+            return View("Create");
+        }
+
 
         // GET: ProductsPagedServer/Details/5
         public async Task<IActionResult> Details(int? id)
