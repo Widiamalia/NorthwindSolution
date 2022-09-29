@@ -3,6 +3,7 @@ using Northwind.Contracts.Dto;
 using Northwind.Contracts.Dto.Category;
 using Northwind.Contracts.Dto.Product;
 using Northwind.Domain.Base;
+using Northwind.Domain.Models;
 using Northwind.Services.Abstraction;
 using System;
 using System.Collections.Generic;
@@ -21,10 +22,20 @@ namespace Northwind.Services
             _mapper = mapper;
         }
 
+        public ProductDto CreateProductId(ProductForCreateDto productForCreateDto)
+        {
+            var productModel = _mapper.Map<Product>(productForCreateDto);
+            _repositoryManager.ProductRepository.Insert(productModel);
+            _repositoryManager.Save();
+            var productDto = _mapper.Map<ProductDto>(productModel);
+            return productDto;
+        }
 
         public void Edit(ProductDto productDto)
         {
-            throw new NotImplementedException();
+            var edit = _mapper.Map<Product>(productDto);
+            _repositoryManager.ProductRepository.Edit(edit);
+            _repositoryManager.Save();
         }
 
         public async Task<IEnumerable<ProductDto>> GetAllProduct(bool trackChanges)
@@ -50,6 +61,11 @@ namespace Northwind.Services
                 .ProductRepository.GetProductPaged(pageIndex, pageSize, trackChanges);
             var productDto = _mapper.Map<IEnumerable<ProductDto>>(productModel);
             return productDto;
+        }
+
+        public void Insert(ProductForCreateDto productForCreateDto)
+        {
+            throw new NotImplementedException();
         }
 
         /*

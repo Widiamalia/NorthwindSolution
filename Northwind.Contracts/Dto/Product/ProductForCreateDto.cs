@@ -14,7 +14,6 @@ namespace Northwind.Contracts.Dto.Product
         [Display(Name ="Product Name")]
         [Required]
         [StringLength(50,ErrorMessage ="Product name cannot be longer than 50")]
-
         public string ProductName { get; set; }
 
         [Display(Name = "Supplier")]
@@ -26,6 +25,8 @@ namespace Northwind.Contracts.Dto.Product
 
         [Display(Name = "Price")]
         public decimal? UnitPrice { get; set; }
+
+        [Display(Name = "UnitsInStock")]
         public short? UnitsInStock { get; set; }
         public short? UnitsOnOrder { get; set; }
         public short? ReorderLevel { get; set; }

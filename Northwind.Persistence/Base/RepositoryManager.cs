@@ -15,6 +15,7 @@ namespace Northwind.Persistence.Base
         private ICategoryRepository _categoryRepository;
         private ICustomerRepository _customerRepository;
         private IProductRepository _productRepository;
+        private IProductPhotoRepository _productPhotoRepository;
 
         public RepositoryManager(NorthwindContext dbContext)
         {
@@ -57,8 +58,19 @@ namespace Northwind.Persistence.Base
             }
         }
 
+        public IProductPhotoRepository ProductPhotoRepository
+        {
+            get
+            {
+                if (_productPhotoRepository == null)
+                {
+                    _productPhotoRepository = new ProductPhotoRepository(_dbContext);
+                }
+                return (_productPhotoRepository);
+            }
+        }
 
-        public void Save()
+/*        public void Save()
         {
             throw new NotImplementedException();
         }
@@ -66,6 +78,10 @@ namespace Northwind.Persistence.Base
         public Task SaveAsync()
         {
             throw new NotImplementedException();
-        }
+        }*/
+
+        public void Save() => _dbContext.SaveChanges();
+
+        public async Task SaveAsync() => await _dbContext.SaveChangesAsync();
     }
 }

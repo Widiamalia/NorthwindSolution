@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -93,9 +95,57 @@ namespace Northwind.Web.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductPhoto(ProductPhotoGroupDto productPhoto)
+        public async Task<IActionResult> CreateProductPhoto(ProductPhotoGroupDto productPhotoDto)
         {
-            return View("Create");
+            var latestProductId = _serviceContext.ProductService.CreateProductId(productPhotoDto.ProductForCreateDto);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var file = productPhotoDto.AllPhoto;
+                    var folderName = Path.Combine("Resources", "images");
+                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    if (file.Count > 0)
+                    {
+                        foreach (var item in file)
+                        {
+                            var fileName = ContentDispositionHeaderValue.Parse(item.ContentDisposition).FileName.Trim('"');
+                            var fullPath = Path.Combine(pathToSave, fileName);
+                            var dbPath = Path.Combine(folderName, fileName);
+                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            {
+                                item.CopyTo(stream);
+                            }
+
+                            var convertSize = (Int16)item.Length;
+
+                            var productPhoto = new ProductPhotoCreateDto
+                            {
+                                PhotoFilename = fileName,
+                                PhotoFileType = item.ContentType,
+                                PhotoFileSize = (byte)convertSize,
+                                PhotoProductId = latestProductId.ProductId
+                            };
+                            _serviceContext.ProductPhotoService.Insert(productPhoto);
+
+                        }
+                        return RedirectToAction(nameof(Index));
+
+                        /*var productGroup = new ProductPhotoGroupDto
+                   {
+                       productForCreateDto = productPhotoDto.productForCreateDto,
+                       Photo1 = productPhotoDto.Photo1,
+                       Photo2 = productPhotoDto.Photo2,
+                       Photo3 = productPhotoDto.Photo3
+                   };*/
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            return View();
         }
 
 
@@ -107,10 +157,13 @@ namespace Northwind.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            /*var product = await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+                .FirstOrDefaultAsync(m => m.ProductId == id);*/
+
+            var product = await _serviceContext.ProductService.GetProductById((int)id, false);
+
             if (product == null)
             {
                 return NotFound();
@@ -120,8 +173,9 @@ namespace Northwind.Web.Controllers
         }
 
         // GET: ProductsPagedServer/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var allCategory = await _serviceContext.CategoryService.GetAllCategory(false);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
             ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName");
             return View();
@@ -140,6 +194,7 @@ namespace Northwind.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            var allCategory = await _serviceContext.CategoryService.GetAllCategory(false);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
             ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName", product.SupplierId);
             return View(product);
@@ -153,11 +208,14 @@ namespace Northwind.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            /*var product = await _context.Products.FindAsync(id);*/
+
+            var product = await _serviceContext.ProductService.GetProductById((int)id, true);
             if (product == null)
             {
                 return NotFound();
             }
+            var allCategory = await _serviceContext.CategoryService.GetAllCategory(false);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
             ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName", product.SupplierId);
             return View(product);
@@ -195,6 +253,7 @@ namespace Northwind.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            var allCategory = await _serviceContext.CategoryService.GetAllCategory(false);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
             ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName", product.SupplierId);
             return View(product);
@@ -208,10 +267,13 @@ namespace Northwind.Web.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+            /*            var product = await _context.Products
+                            .Include(p => p.Category)
+                            .Include(p => p.Supplier)
+                            .FirstOrDefaultAsync(m => m.ProductId == id);*/
+
+            var product = await _serviceContext.ProductService.GetProductById((int)id, false);
+
             if (product == null)
             {
                 return NotFound();
