@@ -9,7 +9,7 @@
 
 <h1>Product Service Pagination Run at Server</h1>
 
-@using (Html.BeginForm("Index","ProductsService",FormMethod.Get)){
+@using (Html.BeginForm("Index","ProductsPagedServer",FormMethod.Get)){
     <div>
         <p>
             Find By ProductName : @Html.TextBox("SearchString",ViewBag.CurrentFilter as string)
