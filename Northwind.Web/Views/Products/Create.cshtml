@@ -16,7 +16,7 @@
             <div class="col-md-10">
                 @Html.LabelFor(model=> model.ProductForCreateDto.ProductName, htmlAttributes : new{@class="form-label"})
                 @Html.TextBox("ProductForCreateDto.ProductName",string.Empty,
-                                new{@placeholder="ProductName",@class="form-control"})
+                new{@placeholder="ProductName",@class="form-control"})
             </div>
             <div class="col-md-10">
                 @Html.LabelFor(model=> model.ProductForCreateDto.CategoryId, htmlAttributes : new{@class="form-label"})
@@ -50,18 +50,21 @@
                         @Html.LabelFor(model=> model.Photo1, htmlAttributes : new{@class="form-label"})
                         @Html.TextBoxFor(model => model.Photo1,"",
                         new{@type="file",@accept="image/*", @onchange="previewImage(this,'preview1')"})
+                        @Html.ValidationMessage("Photo1",new{@class="text-danger"})
                     </div>
                     <div class="col-lg-4 col-md-4 col-6">
                         <img id="preview2" style="width:100px;height:100px;"/>
                         @Html.LabelFor(model=> model.Photo2, htmlAttributes : new{@class="form-label"})
                         @Html.TextBoxFor(model => model.Photo2,"",
                         new{@type="file",@accept="image/*", @onchange="previewImage(this,'preview2')"})
+                        @Html.ValidationMessage("Photo2",new{@class="text-danger"})
                     </div>
                     <div class="col-lg-4 col-md-4 col-6">
                         <img id="preview3" style="width:100px;height:100px;"/>
                         @Html.LabelFor(model=> model.Photo3, htmlAttributes : new{@class="form-label"})
                         @Html.TextBoxFor(model => model.Photo3,"",
                         new{@type="file",@accept="image/*", @onchange="previewImage(this,'preview3')"})
+                        @Html.ValidationMessage("Photo3",new{@class="text-danger"})
                     </div>
                 </div>
            </div>
@@ -74,21 +77,13 @@
     function previewImage(el,Value) {
         //store file image to variable filess
         const files = el.files[0];
-
         //create object FileReader
         const fileReader = new FileReader();
-
         //read files from element input type
         fileReader.readAsDataURL(files);
-
         //send result base64 image to element html image priview1
         fileReader.onload = function (event){
             document.getElementById(Value).src = event.target.result;
         }
     }
 </script>
-
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

@@ -31,12 +31,31 @@ namespace Northwind.Persistence.Repositories
 
         public async Task<Product> GetProductById(int productid, bool trackChanges)
         {
-            return await FindByCondition(c => c.ProductId.Equals(productid), trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(c => c.CategoryId.Equals(productid), trackChanges).SingleOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<Product>> GetProductOnSale(bool trackChanges)
+        {
+            var products = await _dbContext.Products
+                                 .Where(x => x.ProductPhotos
+                                 .Any(y => y.PhotoProductId == x.ProductId))
+                                 .Include(p => p.ProductPhotos)
+                                 .ToListAsync();
+            return products;
+
+            /*var products = await FindAll(trackChanges)
+                .Include(x => x.ProductPhotos.SingleOrDefault())
+                .ToListAsync();
+            return products;*/
+
+            //based on method
+        }
+
 
         public async Task<IEnumerable<Product>> GetProductPaged(int pageIndex, int pageSize, bool trackChanges)
         {
-            return await FindAll(trackChanges).OrderBy(p => p.ProductId)
+            return await FindAll(trackChanges)
+                .OrderBy(p => p.ProductId)
                 .Include(c => c.Category)
                 .Skip((pageIndex -1) * pageSize)
                 .Take(pageSize)

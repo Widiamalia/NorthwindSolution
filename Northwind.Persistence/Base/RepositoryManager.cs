@@ -16,6 +16,7 @@ namespace Northwind.Persistence.Base
         private ICustomerRepository _customerRepository;
         private IProductRepository _productRepository;
         private IProductPhotoRepository _productPhotoRepository;
+        private ISupplierRepository _supplierRepository;
 
         public RepositoryManager(NorthwindContext dbContext)
         {
@@ -70,15 +71,18 @@ namespace Northwind.Persistence.Base
             }
         }
 
-/*        public void Save()
+        public ISupplierRepository SupplierRepository
         {
-            throw new NotImplementedException();
+            get
+            {
+                if (_supplierRepository == null)
+                {
+                    _supplierRepository = new SupplierRepository(_dbContext);
+                }
+                return (_supplierRepository);
+            }
         }
 
-        public Task SaveAsync()
-        {
-            throw new NotImplementedException();
-        }*/
 
         public void Save() => _dbContext.SaveChanges();
 

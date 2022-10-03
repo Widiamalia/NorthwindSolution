@@ -19,6 +19,11 @@ namespace Northwind.Services.Abstraction
 
         ProductDto CreateProductId(ProductForCreateDto productForCreateDto);
 
+        void CreateProductManyPhoto(ProductForCreateDto productForCreateDto,
+                                    List<ProductPhotoCreateDto> productPhotoCreateDtos);
+
+        Task<IEnumerable<ProductDto>> GetProductOnSales(bool trackChanges);
+
         void Insert(ProductForCreateDto productForCreateDto);
 
         void Edit(ProductDto productDto);

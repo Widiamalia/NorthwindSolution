@@ -19,20 +19,19 @@ namespace Northwind.Web.Controllers
     {
         private readonly NorthwindContext _context;
         private readonly IServiceManager _serviceContext;
+        private readonly IUtilityService _utilityService;
 
-
-
-        public ProductsPagedServerController(NorthwindContext context, IServiceManager serviceContext)
+        public ProductsPagedServerController(NorthwindContext context, IServiceManager serviceContext = null, IUtilityService utilityService = null)
         {
             _context = context;
             _serviceContext = serviceContext;
+            _utilityService = utilityService;
         }
 
-        
+
         // GET: ProductsPagedServer
         public async Task<IActionResult> Index(string searchString,
              string currentFilter, string sortOrder, int? page, int? fetchSize)
-
 
         {
             var pageIndex = page ?? 1;
@@ -75,7 +74,8 @@ namespace Northwind.Web.Controllers
            
             if (!string.IsNullOrEmpty(searchString))
             {
-                productDtos = productDtos.Where(p => p.ProductName.ToLower().Contains(searchString) || p.CategoryDto.CategoryName.ToLower().Contains(searchString));
+                productDtos = productDtos
+                    .Where(p => p.ProductName.ToLower().Contains(searchString) || p.Category.CategoryName.ToLower().Contains(searchString));
 
             }
 
@@ -95,74 +95,105 @@ namespace Northwind.Web.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductPhoto(ProductPhotoGroupDto productPhotoDto)
+        public async Task<IActionResult> CreateProductPhoto(ProductPhotoGroupDto productPhotoGroupDto)
         {
-            var latestProductId = _serviceContext.ProductService.CreateProductId(productPhotoDto.ProductForCreateDto);
             if (ModelState.IsValid)
             {
-                try
+                var productPhotoGroup = productPhotoGroupDto;
+                var listPhoto = new List<ProductPhotoCreateDto>();
+
+                foreach (var itemPhoto in productPhotoGroup.AllPhoto)
                 {
-                    var file = productPhotoDto.AllPhoto;
-                    var folderName = Path.Combine("Resources", "images");
-                    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                    if (file.Count > 0)
+                    var fileName = _utilityService.UploadSingleFile(itemPhoto);
+                    var photo = new ProductPhotoCreateDto
                     {
-                        foreach (var item in file)
-                        {
-                            var fileName = ContentDispositionHeaderValue.Parse(item.ContentDisposition).FileName.Trim('"');
-                            var fullPath = Path.Combine(pathToSave, fileName);
-                            var dbPath = Path.Combine(folderName, fileName);
-                            using (var stream = new FileStream(fullPath, FileMode.Create))
-                            {
-                                item.CopyTo(stream);
-                            }
+                        PhotoFilename = fileName,
+                        PhotoFileSize = (short?)itemPhoto.Length,
+                        PhotoFileType = itemPhoto.ContentType
+                    };
 
-                            var convertSize = (Int16)item.Length;
-
-                            var productPhoto = new ProductPhotoCreateDto
-                            {
-                                PhotoFilename = fileName,
-                                PhotoFileType = item.ContentType,
-                                PhotoFileSize = (byte)convertSize,
-                                PhotoProductId = latestProductId.ProductId
-                            };
-                            _serviceContext.ProductPhotoService.Insert(productPhoto);
-
-                        }
-                        return RedirectToAction(nameof(Index));
-
-                        /*var productGroup = new ProductPhotoGroupDto
-                   {
-                       productForCreateDto = productPhotoDto.productForCreateDto,
-                       Photo1 = productPhotoDto.Photo1,
-                       Photo2 = productPhotoDto.Photo2,
-                       Photo3 = productPhotoDto.Photo3
-                   };*/
-                    }
+                    listPhoto.Add(photo);
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                _serviceContext.ProductService
+                    .CreateProductManyPhoto(productPhotoGroupDto.ProductForCreateDto, listPhoto);
+
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "CompanyName");
+
+
             return View("Create");
+
         }
 
+            /*        public async Task<IActionResult> CreateProductPhoto(ProductPhotoGroupDto productPhotoDto)
+                    {
 
-        // GET: ProductsPagedServer/Details/5
-        public async Task<IActionResult> Details(int? id)
+                        var latestProductId = _serviceContext.ProductService.CreateProductId(productPhotoDto.ProductForCreateDto);
+                        if (ModelState.IsValid)
+                        {
+                            try
+                            {
+                                var file = productPhotoDto.AllPhoto;
+                                var folderName = Path.Combine("Resources", "images");
+                                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                                if (file.Count > 0)
+                                {
+                                    foreach (var item in file)
+                                    {
+                                        var fileName = ContentDispositionHeaderValue.Parse(item.ContentDisposition).FileName.Trim('"');
+                                        var fullPath = Path.Combine(pathToSave, fileName);
+                                        var dbPath = Path.Combine(folderName, fileName);
+                                        using (var stream = new FileStream(fullPath, FileMode.Create))
+                                        {
+                                            item.CopyTo(stream);
+                                        }
+
+                                        var convertSize = (Int16)item.Length;
+
+                                        var productPhoto = new ProductPhotoCreateDto
+                                        {
+                                            PhotoFilename = fileName,
+                                            PhotoFileType = item.ContentType,
+                                            PhotoFileSize = (byte)convertSize,
+                                            PhotoProductId = latestProductId.ProductId
+                                        };
+                                        _serviceContext.ProductPhotoService.Insert(productPhoto);
+
+                                    }
+                                    return RedirectToAction(nameof(Index));
+
+                                    var productGroup = new ProductPhotoGroupDto
+                                    {
+                                        ProductForCreateDto = productPhotoDto.ProductForCreateDto,
+                                        Photo1 = productPhotoDto.Photo1,
+                                        Photo2 = productPhotoDto.Photo2,
+                                        Photo3 = productPhotoDto.Photo3
+                                    };
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw;
+                            }
+                        }
+                        return View("Create");
+                    }*/
+
+
+            // GET: ProductsPagedServer/Details/5
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            /*var product = await _context.Products
+            var product = await _context.Products
                 .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .FirstOrDefaultAsync(m => m.ProductId == id);*/
+                //.Include(p => p.Supplier)
+                .FirstOrDefaultAsync(m => m.ProductId == id);
 
-            var product = await _serviceContext.ProductService.GetProductById((int)id, false);
 
             if (product == null)
             {
@@ -211,9 +242,10 @@ namespace Northwind.Web.Controllers
                 return NotFound();
             }
 
-            /*var product = await _context.Products.FindAsync(id);*/
+            var product = await _context.Products.FindAsync(id);
 
-            var product = await _serviceContext.ProductService.GetProductById((int)id, true);
+            //var product = await _serviceContext.ProductService.GetProductById((int)id, true);
+
             if (product == null)
             {
                 return NotFound();
@@ -270,12 +302,11 @@ namespace Northwind.Web.Controllers
                 return NotFound();
             }
 
-            /*            var product = await _context.Products
-                            .Include(p => p.Category)
-                            .Include(p => p.Supplier)
-                            .FirstOrDefaultAsync(m => m.ProductId == id);*/
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Supplier)
+                .FirstOrDefaultAsync(m => m.ProductId == id);
 
-            var product = await _serviceContext.ProductService.GetProductById((int)id, false);
 
             if (product == null)
             {

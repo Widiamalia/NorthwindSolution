@@ -31,6 +31,26 @@ namespace Northwind.Services
             return productDto;
         }
 
+        public void CreateProductManyPhoto(ProductForCreateDto productForCreateDto, 
+            List<ProductPhotoCreateDto> productPhotoCreateDtos)
+        {
+            //1. Insert into table product
+            var productModel = _mapper.Map<Product>(productForCreateDto);
+            _repositoryManager.ProductRepository.Insert(productModel);
+            _repositoryManager.Save();
+
+            //insert into table productphotos
+
+            foreach (var item in productPhotoCreateDtos)
+            {
+                item.PhotoProductId = productModel.ProductId;
+                var photoModel = _mapper.Map<ProductPhoto>(item);
+                _repositoryManager.ProductPhotoRepository.Insert(photoModel);
+            }
+
+            _repositoryManager.Save();
+        }
+
         public void Edit(ProductDto productDto)
         {
             var edit = _mapper.Map<Product>(productDto);
@@ -55,6 +75,13 @@ namespace Northwind.Services
             return productDto;
         }
 
+        public async Task<IEnumerable<ProductDto>> GetProductOnSales(bool trackChanges)
+        {
+            var productModel = await _repositoryManager.ProductRepository.GetProductOnSale(trackChanges);
+            var productDto = _mapper.Map <IEnumerable<ProductDto>>(productModel);
+            return productDto;
+        }
+
         public async Task<IEnumerable<ProductDto>> GetProductPaged(int pageIndex, int pageSize, bool trackChanges)
         {
             var productModel = await _repositoryManager
@@ -65,18 +92,16 @@ namespace Northwind.Services
 
         public void Insert(ProductForCreateDto productForCreateDto)
         {
-            throw new NotImplementedException();
+            var insert = _mapper.Map<Product>(productForCreateDto);
+            _repositoryManager.ProductRepository.Insert(insert);
+            _repositoryManager.Save();
         }
-
-        /*
-       public void Insert(CategoryForCreateDto categoryForCreateDto)
-       {
-           throw new NotImplementedException();
-       }*/
 
         public void Remove(ProductDto productDto)
         {
-            throw new NotImplementedException();
+            var remove = _mapper.Map<Product>(productDto);
+            _repositoryManager.ProductRepository.Remove(remove);
+            _repositoryManager.Save();
         }
     }
 }

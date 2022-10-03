@@ -13,7 +13,7 @@ namespace Northwind.Domain.Entities
 
         public string Description { get; set; }
 
-        public string Photo { get; set; }
+        public string PhotoImage { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
 

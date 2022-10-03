@@ -15,10 +15,10 @@ namespace Northwind.Domain.Repositories
 
         Task<IEnumerable<ProductPhoto>> GetProductPhotoPaged(int pageIndex, int pageSize, bool trackChanges);
 
-        void Insert(ProductPhoto ProductPhoto);
+        void Insert(ProductPhoto productPhoto);
 
-        void Edit(ProductPhoto ProductPhoto);
+        void Edit(ProductPhoto productPhoto);
 
-        void Remove(ProductPhoto ProductPhoto);
+        void Remove(ProductPhoto productPhoto);
     }
 }

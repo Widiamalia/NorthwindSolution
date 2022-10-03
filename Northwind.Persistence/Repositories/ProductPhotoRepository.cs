@@ -16,9 +16,9 @@ namespace Northwind.Persistence.Repositories
         {
         }
 
-        public void Edit(ProductPhoto ProductPhoto)
+        public void Edit(ProductPhoto productPhoto)
         {
-            Update(ProductPhoto);
+            Update(productPhoto);
         }
 
         public async Task<IEnumerable<ProductPhoto>> GetAllProductPhoto(bool trackChanges)
@@ -45,14 +45,14 @@ namespace Northwind.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public void Insert(ProductPhoto ProductPhoto)
+        public void Insert(ProductPhoto productPhoto)
         {
-            Create(ProductPhoto);
+            Create(productPhoto);
         }
 
-        public void Remove(ProductPhoto ProductPhoto)
+        public void Remove(ProductPhoto productPhoto)
         {
-            Delete(ProductPhoto);
+            Delete(productPhoto);
         }
     }
 }

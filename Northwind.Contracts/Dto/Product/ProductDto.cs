@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Northwind.Contracts.Dto.Supplier;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,10 @@ namespace Northwind.Contracts.Dto.Product
         public short? ReorderLevel { get; set; }
         public bool Discontinued { get; set; }
 
-        public virtual CategoryDto CategoryDto { get; set; }
+        public string Photo { get; set; }
 
+        public virtual CategoryDto Category { get; set; }
+        public virtual SupplierDto Supplier { get; set; }
+        public virtual ICollection<ProductPhotoDto> ProductPhotos { get; set; }
     }
 }

@@ -51,6 +51,7 @@ namespace Northwind.Persistence
         public virtual DbSet<Territory> Territories { get; set; }
         public virtual DbSet<ProductPhoto> ProductPhotos { get; set; }
 
+
         /*        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 {
                     if (!optionsBuilder.IsConfigured)

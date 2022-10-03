@@ -38,7 +38,7 @@
                 @Html.DisplayNameFor(model => model.FirstOrDefault().UnitsOnOrder)
             </td>
             <td>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().CategoryDto.CategoryName)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Category.CategoryName)
             </td>
             <th></th>
         </tr>
@@ -59,7 +59,7 @@
                 @Html.DisplayFor(modelItem => item.UnitsOnOrder)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CategoryDto.CategoryName)
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
