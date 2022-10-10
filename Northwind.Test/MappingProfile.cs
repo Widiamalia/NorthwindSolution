@@ -3,7 +3,7 @@ using Northwind.Contracts.Dto;
 using Northwind.Contracts.Dto.Category;
 using Northwind.Contracts.Dto.Product;
 using Northwind.Domain.Models;
-using CategoryDto = Northwind.Contracts.Dto.CategoryDto;
+using CategoriesDto = Northwind.Contracts.Dto.CategoriesDto;
 
 namespace Northwind.Test.Mapping
 {
@@ -11,7 +11,7 @@ namespace Northwind.Test.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoriesDto>().ReverseMap();
             CreateMap<Category, CategoryForCreateDto>().ReverseMap();
 
             CreateMap<Product, ProductDto>().ReverseMap();

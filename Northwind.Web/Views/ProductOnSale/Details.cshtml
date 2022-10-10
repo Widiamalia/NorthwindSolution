@@ -1,0 +1,89 @@
+﻿@model Northwind.Contracts.Dto.Product.ProductDto
+
+<h2 style="text-align: center">Product Details</h2>
+
+@using (Html.BeginForm("CreateOrder"
+, "ProductOnSale"
+, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<div class="col-md">
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                 @Html.HiddenFor(model => model.ProductId)
+                <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var item in Model.ProductPhotos)
+                        {
+                            if (Model.ProductPhotos.FirstOrDefault() == item)
+                            {
+                                <div class="carousel-item active">
+                                    <img class="card-img-top" style="height:480px" src="@Url.Content("~/Resources/images/"+item.PhotoFilename)" alt="Card image cap">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="carousel-item">
+                                    <img class="card-img-top" style="height:480px" src="@Url.Content("~/Resources/images/"+item.PhotoFilename)" alt="Card image cap">
+                                </div>
+                            }
+                        }
+                    </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                   </div>
+                </div>
+
+        <div class="col md-8">
+            <div class="card-body">
+               <h4 class="card-title">@Html.DisplayFor(model => model.ProductName)</h4>
+               <br>
+               <h5 class="pb-1 mb-4">
+                 @Html.LabelFor(model => model.UnitPrice)
+                 @Html.HiddenFor(model => model.UnitPrice)
+                 @Html.DisplayFor(model => model.UnitPrice)
+               </h5>
+               <h5 class="pb-1 mb-4">
+                 @Html.LabelFor(model => model.UnitsInStock)
+                 @Html.DisplayFor(model => model.UnitsInStock)
+               </h5>
+                 @Html.TextBox("QuantityPerUnit",1,new{@type="number"})
+               <br>
+               <div class="card accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button type="button" class="accordion-button collapsed" 
+                                data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="false" aria-controls="accordionOne">
+                          Descriptions
+                        </button>
+                      </h2>
+                      <div id="accordionOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="">
+                        <div class="accordion-body">
+                          Online Shop range of women's, kids' & men's clothes for the latest fashion trends.
+                          Free Shipping On £35+✓ | Free Return - 45 Days✓ | 9000+ New Dropped!!
+                        </div>
+                      </div>
+                    </div>
+                   <br>
+                 <button type="submit" class="btn btn-primary"><i class='bx bxs-cart-add'><span>  Add to Cart</span></i></button>
+ 
+                @*<a asp-action="Checkout" class="btn btn-primary"><span>  Checkout  </span></a>*@
+                <button type="submit" class="btn btn-primary">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+     <div>
+         <a asp-action="Edit" asp-route-id="">Edit</a> |
+         <a asp-action="Index">Back to List</a>
+     </div>
+}

@@ -16,7 +16,11 @@ namespace Northwind.Domain.Repositories
         Task<IEnumerable<Product>> GetProductPaged(int pageIndex, int pageSize, bool trackChanges);
 
         Task<IEnumerable<Product>> GetProductOnSale(bool trackChanges);
-        
+
+        Task<Product> GetProductOnSaleById(int productOnSaleId, bool trackChanges);
+        Task<Product> GetProductPhotoOnSalesById(int productOnSaleId, bool trackChanges);
+        Task<Product> GetProductOrderOnSalesById(int productOnSaleId, bool trackChanges);
+
         void Insert(Product product);
         void Edit(Product product);
         void Remove(Product product);

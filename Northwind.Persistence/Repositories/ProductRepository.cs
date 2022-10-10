@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Northwind.Persistence.Repositories
 {
-    internal class ProductRepository : RepositoryBase<Product>, IProductRepository
+    public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
         public ProductRepository(NorthwindContext dbContext) : base(dbContext)
         {
@@ -26,12 +26,16 @@ namespace Northwind.Persistence.Repositories
             return await FindAll(trackChanges)
                 .Include(c => c.Category)
                 .OrderBy(p => p.ProductId)
+                .Include(od => od.OrderDetails)
                 .ToListAsync();
         }
 
         public async Task<Product> GetProductById(int productid, bool trackChanges)
         {
-            return await FindByCondition(c => c.CategoryId.Equals(productid), trackChanges).SingleOrDefaultAsync();
+            return await FindByCondition(p => p.ProductId.Equals(productid), trackChanges)
+                .Include(c => c.Category)
+                .Include(od => od.OrderDetails)
+                .SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProductOnSale(bool trackChanges)
@@ -51,6 +55,17 @@ namespace Northwind.Persistence.Repositories
             //based on method
         }
 
+        public async Task<Product> GetProductOnSaleById(int productOnSaleId, bool trackChanges)
+        {
+            var productOnSale = await FindByCondition(p => p.ProductId.Equals(productOnSaleId), trackChanges)
+                                 .Where(x => x.ProductPhotos
+                                 .Any(y => y.PhotoProductId == productOnSaleId))
+                                 .Include(c => c.Category)
+                                 .Include(o => o.OrderDetails)
+                                 .Include(p => p.ProductPhotos)
+                                 .SingleOrDefaultAsync();
+            return productOnSale;
+        }
 
         public async Task<IEnumerable<Product>> GetProductPaged(int pageIndex, int pageSize, bool trackChanges)
         {
@@ -60,6 +75,30 @@ namespace Northwind.Persistence.Repositories
                 .Skip((pageIndex -1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public async Task<Product> GetProductPhotoOnSalesById(int productOnSaleId, bool trackChanges)
+        {
+            var productOnSale = await FindByCondition(p => p.ProductId.Equals(productOnSaleId), trackChanges)
+                                 .Where(x => x.ProductPhotos
+                                 .Any(y => y.PhotoProductId == productOnSaleId))
+                                 .Include(c => c.Category)
+                                 .Include(p => p.ProductPhotos)
+                                 .Include(od => od.OrderDetails)
+                                 .SingleOrDefaultAsync();
+            return productOnSale;
+        }
+
+        public async Task<Product> GetProductOrderOnSalesById(int productOnSaleId, bool trackChanges)
+        {
+            var productOnSale = await FindByCondition(p => p.ProductId.Equals(productOnSaleId), trackChanges)
+                                 .Where(x => x.ProductPhotos
+                                 .Any(y => y.PhotoProductId == productOnSaleId))
+                                 .Include(c => c.Category)
+                                 .Include(o => o.OrderDetails)
+                                 .Include(p => p.ProductPhotos)
+                                 .SingleOrDefaultAsync();
+            return productOnSale;
         }
 
         public void Insert(Product product)

@@ -31,7 +31,9 @@ namespace Northwind.Services
 
         public void Edit(object supplierDto)
         {
-            throw new NotImplementedException();
+            var edit = _mapper.Map<Supplier>(supplierDto);
+            _repositoryManager.SupplierRepository.Edit(edit);
+            _repositoryManager.Save();
         }
 
         public async Task<IEnumerable<SupplierDto>> GetAllSupplier(bool trackChanges)
@@ -50,15 +52,15 @@ namespace Northwind.Services
 
         public void Insert(SupplierForCreateDto supplierForCreateDto)
         {
-            var edit = _mapper.Map<Supplier>(supplierForCreateDto);
-            _repositoryManager.SupplierRepository.Insert(edit);
+            var insert = _mapper.Map<Supplier>(supplierForCreateDto);
+            _repositoryManager.SupplierRepository.Insert(insert);
             _repositoryManager.Save();
         }
 
         public void Remove(SupplierDto supplierDto)
         {
-            var edit = _mapper.Map<Supplier>(supplierDto);
-            _repositoryManager.SupplierRepository.Remove(edit);
+            var remove = _mapper.Map<Supplier>(supplierDto);
+            _repositoryManager.SupplierRepository.Remove(remove);
             _repositoryManager.Save();
         }
     }

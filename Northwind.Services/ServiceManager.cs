@@ -19,6 +19,11 @@ namespace Northwind.Services
 
         private readonly Lazy<ISupplierService> _lazySupplierService;
 
+        private readonly Lazy<IOrderService> _lazyOrderService;
+
+        private readonly Lazy<IOrderDetailService> _lazyOrderDetailService;
+
+        private readonly Lazy<IShipperService> _lazyshipperService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
         {
@@ -33,11 +38,23 @@ namespace Northwind.Services
 
             _lazySupplierService = new Lazy<ISupplierService>(
                 () => new SupplierService(repositoryManager, mapper));
+
+            _lazyOrderService = new Lazy<IOrderService>( 
+                () => new OrderService(repositoryManager, mapper));
+
+            _lazyOrderDetailService = new Lazy<IOrderDetailService>(
+                () => new OrderDetailService(repositoryManager, mapper));
+
+            _lazyshipperService = new Lazy<IShipperService>(
+                () => new ShipperService(repositoryManager, mapper));
         }
 
         public ICategoryService CategoryService => _lazyCategoryService.Value;
         public IProductService ProductService => _lazyProductService.Value;
         public IProductPhotoService ProductPhotoService => _lazyProductPhotoService.Value;
         public ISupplierService SupplierService => _lazySupplierService.Value;
+        public IOrderService OrderService => _lazyOrderService.Value;
+        public IOrderDetailService OrderDetailService => _lazyOrderDetailService.Value;
+        public IShipperService ShipperService => _lazyshipperService.Value;
     }
 }

@@ -18,7 +18,5 @@ namespace Northwind.Services.Abstraction
         void Edit(SupplierDto supplierDto);
 
         void Remove(SupplierDto supplierDto);
-        void Edit(object supplierDto);
-        /*void Insert(Northwind.Domain.Models.Supplier supplier);*/
     }
 }

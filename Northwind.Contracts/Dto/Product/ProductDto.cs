@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Northwind.Contracts.Dto.Category;
+using Northwind.Contracts.Dto.OrderDetail;
 using Northwind.Contracts.Dto.Supplier;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ namespace Northwind.Contracts.Dto.Product
 {
     public class ProductDto
     {
+
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public int? SupplierId { get; set; }
@@ -27,6 +30,8 @@ namespace Northwind.Contracts.Dto.Product
 
         public virtual CategoryDto Category { get; set; }
         public virtual SupplierDto Supplier { get; set; }
+
+        public virtual ICollection<OrderDetailDto> OrderDetails { get; set; } 
         public virtual ICollection<ProductPhotoDto> ProductPhotos { get; set; }
     }
 }

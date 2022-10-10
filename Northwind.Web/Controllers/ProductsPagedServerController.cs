@@ -21,7 +21,7 @@ namespace Northwind.Web.Controllers
         private readonly IServiceManager _serviceContext;
         private readonly IUtilityService _utilityService;
 
-        public ProductsPagedServerController(NorthwindContext context, IServiceManager serviceContext = null, IUtilityService utilityService = null)
+        public ProductsPagedServerController(NorthwindContext context, IServiceManager serviceContext, IUtilityService utilityService)
         {
             _context = context;
             _serviceContext = serviceContext;
