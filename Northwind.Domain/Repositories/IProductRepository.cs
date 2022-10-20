@@ -1,4 +1,5 @@
-﻿using Northwind.Domain.Models;
+﻿using Northwind.Domain.Dto;
+using Northwind.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace Northwind.Domain.Repositories
         Task<Product> GetProductOnSaleById(int productOnSaleId, bool trackChanges);
         Task<Product> GetProductPhotoOnSalesById(int productOnSaleId, bool trackChanges);
         Task<Product> GetProductOrderOnSalesById(int productOnSaleId, bool trackChanges);
+
+        IEnumerable<TotalProductByCategory> GetTotalProductByCategory();
 
         void Insert(Product product);
         void Edit(Product product);
