@@ -78,8 +78,7 @@
 }
     </tbody>
 </table>
-@Html.PagedListPager(
-    Model,
+@Html.PagedListPager(Model,
     page => Url.Action("Index", new {page,currentFilter=ViewBag.CurrentFilter}))
 
     <script>

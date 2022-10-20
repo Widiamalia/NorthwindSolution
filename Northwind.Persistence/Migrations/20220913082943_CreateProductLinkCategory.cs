@@ -6,7 +6,7 @@ namespace Northwind.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+/*            migrationBuilder.AddColumn<string>(
                 name: "Photo",
                 table: "Categories",
                 type: "nvarchar(max)",
@@ -48,7 +48,7 @@ namespace Northwind.Persistence.Migrations
 
             migrationBuilder.DropColumn(
                 name: "Photo",
-                table: "Categories");
+                table: "Categories");*/
         }
     }
 }

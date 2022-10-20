@@ -6,7 +6,7 @@ namespace Northwind.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+/*            migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
                 {
@@ -24,7 +24,7 @@ namespace Northwind.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Categories");*/
         }
     }
 }

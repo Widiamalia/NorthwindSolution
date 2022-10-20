@@ -183,7 +183,7 @@ namespace Northwind.Web.Controllers
 
             // GET: ProductsPagedServer/Details/5
             public async Task<IActionResult> Details(int? id)
-        {
+            {
             if (id == null)
             {
                 return NotFound();
@@ -201,7 +201,7 @@ namespace Northwind.Web.Controllers
             }
 
             return View(product);
-        }
+            }
 
         // GET: ProductsPagedServer/Create
         public async Task<IActionResult> Create()

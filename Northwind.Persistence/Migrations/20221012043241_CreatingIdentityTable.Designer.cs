@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Northwind.Persistence;
 
 namespace Northwind.Persistence.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
-    partial class ShopeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221012043241_CreatingIdentityTable")]
+    partial class CreatingIdentityTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,22 +47,6 @@ namespace Northwind.Persistence.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "695446ef-dd59-4ee2-aa2d-bcdd0c96f457",
-                            ConcurrencyStamp = "995902cb-f56f-4a81-a3e7-c438f790c5e8",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "c4b313f0-cf99-4456-a63d-30f5bf927b06",
-                            ConcurrencyStamp = "d4fb8e78-41d5-4a23-8c4a-ad27c494ec49",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Northwind.Domain.Models.User> SignInManager
+@inject UserManager<Northwind.Domain.Models.User> UserManager
+
+<!DOCTYPE html>
 
 <!-- =========================================================
 * Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
@@ -63,6 +67,10 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="~/lib/sneat-1.0.0/assets/js/config.js"></script>
+
+    <partial name="_HeadPartial"/>
+
+
   </head>
 
   <body>
@@ -283,10 +291,13 @@
                               <img src="~/lib/sneat-1.0.0/assets/img/avatars/8.png" alt class="w-px-40 h-auto rounded-circle" />
                             </div>
                           </div>
-                          <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">John Doe</span>
-                            <small class="text-muted">Admin</small>
-                          </div>
+                          @if (SignInManager.IsSignedIn(User))
+                          {
+                                <div class="flex-grow-1">
+                                    <span class="fw-semibold d-block">Hi,@User.Identity.Name</span>
+                                    <small class="text-muted">@User.Claims.FirstOrDefault(c => c.Type.Contains("role",StringComparison.OrdinalIgnoreCase))?.Value</small>
+                                </div>          
+                          }                     
                         </div>
                       </a>
                     </li>
@@ -318,10 +329,12 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="auth-login-basic.html">
-                         <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
-                      </a>
+                    @if (SignInManager.IsSignedIn(User))
+                     {
+                        <form class="form-inline" asp-controller="Account" asp-action="Logout">
+                            <button type="submit" class="nav-link btn btn-link text-info">Logout</button>
+                        </form>
+                     }
                     </li>
                   </ul>
                 </li>

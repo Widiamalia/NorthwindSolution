@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Northwind.Contracts.Dto.Order;
@@ -20,6 +21,7 @@ namespace Northwind.Web.Controllers
         }
 
         // GET: ProductOnSaleController
+        //[Authorize (Roles ="Manager")]
         public async Task<ActionResult> Index()
         {
             var productOnSales = await _serviceManager.
